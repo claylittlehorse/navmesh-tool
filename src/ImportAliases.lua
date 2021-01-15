@@ -1,3 +1,6 @@
+local lib = script.Parent.Lib
 return {
-    Roact = script.Parent.Lib.Roact
+    Roact = lib.Roact,
+    RoactKetchup = lib.RoactKetchup,
+    Ketchup = lib.Ketchup
 }

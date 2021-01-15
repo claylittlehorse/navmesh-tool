@@ -11,7 +11,7 @@ local function recursiveJoin(oldState, newState)
     for index, oldValue in pairs(oldState) do
         local newValue = newState[index]
 
-        if not newValue then
+        if newValue == nil then
             newState[index] = oldValue
         else
             if newValue == None then

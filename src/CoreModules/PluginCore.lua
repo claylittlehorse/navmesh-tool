@@ -10,6 +10,7 @@ function PluginCore.start(plugin)
         false, -- initial enabled
         false -- overrideEnabledRestore
     ))
+    pluginGui.Title = "Navmesh Tool"
 
     PluginCore.toolbar = toolbar
     PluginCore.toggleWidgetButton = toggleWidgetButton

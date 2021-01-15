@@ -7,17 +7,23 @@ import.setConfig({
 })
 shared.___navmesh_tool_import = import
 
-local CoreModules = import"CoreModules"
+local Ketchup = import "Ketchup"
+local CoreModules = import "CoreModules"
 
 local coreModuleLoadOrder = {
-    "PluginCore", 
+	"PluginCore",
+	"UIMount",
 }
 
 local loadedModules = {}
 
+local store = Ketchup.Store.new({
+	enabled = false
+})
+
 for _, moduleName in ipairs(coreModuleLoadOrder) do
 	local coreModule = import("CoreModules/"..moduleName)
-	coreModule.start(plugin)
+	coreModule.start(plugin, store)
 
 	loadedModules[moduleName] = true
 end

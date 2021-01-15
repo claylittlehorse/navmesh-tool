@@ -1,4 +1,4 @@
-local Roact = require(script.Parent.Lib.Roact)
+local Roact = require(script.Parent.Parent.Roact)
 local getStore = require(script.Parent.getStore)
 local shallowEqual = require(script.Parent.shallowEqual)
 local join = require(script.Parent.join)
@@ -33,6 +33,10 @@ local function makeStateUpdater(store)
 
 		local propsForChild = join(nextProps, mappedStoreState, prevState.mappedStorePush)
 
+		propsForChild.pushToStore = function(...)
+			store:push(...)
+		end
+
 		return {
 			mappedStoreState = mappedStoreState,
 			propsForChild = propsForChild,
@@ -47,19 +51,13 @@ end
 		() -> (storeState, props) -> partialProps
 	mapPushToProps: (Push) -> partialProps
 ]]
-local function connect(mapStateToProps, mapPushToProps)
+local function connect(mapStateToProps)
 	local connectTrace = debug.traceback()
 
 	if mapStateToProps ~= nil then
 		assert(typeof(mapStateToProps) == "function", "mapStateToProps must be a function or nil!")
 	else
 		mapStateToProps = noop
-	end
-
-	if mapPushToProps ~= nil then
-		assert(typeof(mapPushToProps) == "function", "mapPushToProps must be a function or nil!")
-	else
-		mapPushToProps = noop
 	end
 
 	return function(innerComponent)
@@ -142,10 +140,6 @@ local function connect(mapStateToProps, mapPushToProps)
 				error(message)
 			end
 
-			local mappedStorePush = mapPushToProps(function(...)
-				return self.store:push(...)
-			end)
-
 			local stateUpdater = makeStateUpdater(self.store)
 
 			self.state = {
@@ -157,9 +151,6 @@ local function connect(mapStateToProps, mapPushToProps)
 				-- Used by the store changed connection and stateUpdater to
 				-- construct propsForChild.
 				mapStateToProps = mapStateToProps,
-
-				-- Used by stateUpdater to construct propsForChild.
-				mappedStorePush = mappedStorePush,
 
 				-- Passed directly into the component that Connection is
 				-- wrapping.

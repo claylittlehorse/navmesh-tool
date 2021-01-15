@@ -1,5 +1,4 @@
 local Roact = require(script.Parent.Parent.Roact)
-
 local storeKey = require(script.Parent.storeKey)
 
 local StoreProvider = Roact.Component:extend("StoreProvider")
