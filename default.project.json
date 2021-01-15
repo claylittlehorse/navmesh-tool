@@ -1,0 +1,12 @@
+{
+  "name": "navmesh-tool",
+  "tree": {
+    "$className": "Folder",
+    "$path": "src",
+
+    "Lib": {
+      "$className": "Folder",
+      "$path": "lib"
+    }
+  }
+}

@@ -1,0 +1,1 @@
+local import = shared.___navmesh_tool_import
