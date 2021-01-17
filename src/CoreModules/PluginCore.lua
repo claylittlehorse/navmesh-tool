@@ -4,7 +4,7 @@ local PluginCore = {}
 
 function PluginCore.start(plugin)
     local toolbar = plugin:CreateToolbar("Navmesh Tool")
-    local toggleWidgetButton = toolbar:CreateButton("toggleNavmeshDockWidget", "Toggle Navmesh Tool", "", "Navmesh Tools")
+    local toggleWidgetButton = toolbar:CreateButton("toggleNavmeshDockWidget", "Toggle Navmesh Tool", "rbxassetid://6253845867", "Navmesh Tools")
     local pluginGui = plugin:CreateDockWidgetPluginGui("Navmesh Tool", DockWidgetPluginGuiInfo.new(
         Enum.InitialDockState.Right, -- Initial dock state
         false, -- initial enabled
