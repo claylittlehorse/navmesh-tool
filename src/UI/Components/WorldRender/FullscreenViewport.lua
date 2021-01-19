@@ -1,4 +1,4 @@
-local import = require(game.ReplicatedStorage.Lib.Import)
+local import = shared.___navmesh_tool_import
 
 local Roact = import "Roact"
 

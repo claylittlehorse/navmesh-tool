@@ -2,7 +2,7 @@ local import = shared.___navmesh_tool_import
 
 local StudioService = game:GetService("StudioService")
 
-local StringSplitPattern = import "Utils/StringSplitPattern"
+local StringSplitPattern = import "Util/StringSplitPattern"
 
 local function convertObjToVertsAndPolygons(objFileBinary)
 	local lines = string.split(objFileBinary, "\n")
@@ -31,7 +31,7 @@ local function convertObjToVertsAndPolygons(objFileBinary)
 					table.insert(polygon, vertexIndex)
 				end
 			end
-
+			table.insert(polygons, polygon)
 		end
 	end
 
@@ -60,7 +60,7 @@ local function createNavMesh(vertices, polygons)
 			navMeshNode.vertices[i] = vertexIndex
 
 			-- Find the line in linesDict (or create a new entry for a line)
-			local nextVertexIndex = (i + 1) % (#polygon + 1)
+			local nextVertexIndex = polygon[i % #polygon + 1]
 			local lineKey = tostring(vertexIndex) .. "," .. tostring(nextVertexIndex)
 			local inverseLineKey = tostring(nextVertexIndex) .. "," .. tostring(vertexIndex)
 
@@ -68,13 +68,13 @@ local function createNavMesh(vertices, polygons)
 
 			if not polygonsWithLine then
 				polygonsWithLine = {}
-				table.insert(lines, {vertexIndex, nextVertexIndex})
+				table.insert(lines, {a = vertexIndex, b = nextVertexIndex})
 
 				linesDict[lineKey] = {
 					polygonsWithLine = polygonsWithLine,
 					lineIndex = #lines,
 				}
-			end 
+			end
 
 			-- Add the polygon to the lineDict for building connections between nodes later
 			table.insert(polygonsWithLine, nodeIndex)
@@ -87,7 +87,7 @@ local function createNavMesh(vertices, polygons)
 		local line = lines[lineInfo.lineIndex]
 		local connectedNodeIndices = lineInfo.polygonsWithLine
 
-		-- Connect nodes 
+		-- Connect nodes
 		for i, nodeIndex in ipairs(connectedNodeIndices) do
 			local thisNode = navMesh[nodeIndex]
 
@@ -115,11 +115,16 @@ local function createNavMesh(vertices, polygons)
 end
 
 local function ImportObj()
-	local objFileBinary = StudioService:PromptImportFile("obj")
+	local objFile = StudioService:PromptImportFile({"obj"})
+	if not objFile then
+		return
+	end
+
+	local objFileBinary = objFile:GetBinaryContents()
 	local vertices, polygons = convertObjToVertsAndPolygons(objFileBinary)
 	local navMesh = createNavMesh(vertices, polygons)
 
 	return navMesh
 end
 
-return ImportObj()   
+return ImportObj

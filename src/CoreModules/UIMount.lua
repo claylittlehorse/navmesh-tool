@@ -8,7 +8,6 @@ local App = import "UI/Root/App"
 local UIMount = {}
 
 function UIMount.start(plugin, store)
-	print("mounting")
 	Roact.mount(App(store), PluginCore.pluginGui, "NavmeshTool")
 end
 
