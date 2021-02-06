@@ -6,7 +6,7 @@ local Roact = import "Roact"
 local RoactKetchup = import "RoactKetchup"
 
 local TestButton = import "UI/Components/Interface/ImportButton"
-local Navmesh = import "UI/Components/NavmeshRender/Navmesh"
+local Navmesh = import "UI/Components/WorldRender/Navmesh"
 
 Roact.setGlobalConfig({
     typeChecks = true,

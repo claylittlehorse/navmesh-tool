@@ -3,6 +3,7 @@ local import = shared.___navmesh_tool_import
 local Roact = import "Roact"
 local RoactKetchup = import "RoactKetchup"
 local ImportNavmeshFromObj = import "PluginUtil/ImportNavmeshFromObj"
+local Promise = import "Promise"
 
 local function ImportButton(props)
 	local enabled = props.enabled
@@ -16,10 +17,14 @@ local function ImportButton(props)
         BackgroundColor3 = color,
         Size = UDim2.fromOffset(75, 75),
 		[Roact.Event.Activated] = function()
-			local navMesh = ImportNavmeshFromObj()
 			pushToStore({
-				navMesh = navMesh,
+				navMesh = nil,
 			})
+			Promise.defer(function()
+				pushToStore({
+					navMesh = ImportNavmeshFromObj(),
+				})
+			end)
 		end
     })
 end

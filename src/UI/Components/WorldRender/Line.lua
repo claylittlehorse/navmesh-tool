@@ -32,7 +32,7 @@ function Line:render()
 	local props = self.props
 
 	local ab = props.pointA - props.pointB
-	local length = ab.magnitude
+	local length = ab.Magnitude
 
 	local centerCf = CFrame.new(props.pointA:Lerp(props.pointB, 0.5), props.pointA)
 
