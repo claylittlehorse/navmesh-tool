@@ -46,6 +46,7 @@ local function createNavMesh(vertices, polygons)
 		nodes = {},
 		lines = lines,
 		vertices = vertices,
+		polygons = polygons
 	}
 
 	for nodeIndex, polygon in ipairs(polygons) do

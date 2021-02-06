@@ -3,5 +3,7 @@ return {
     Roact = lib.Roact,
     RoactKetchup = lib.RoactKetchup,
     Ketchup = lib.Ketchup,
-    t = lib.t,
+	t = lib.t,
+	LuaGeometry = lib.LuaGeometry,
+	Promise = lib.Promise,
 }
