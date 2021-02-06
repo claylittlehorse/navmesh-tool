@@ -8,6 +8,11 @@ local RoactKetchup = import "RoactKetchup"
 local TestButton = import "UI/Components/Interface/ImportButton"
 local Navmesh = import "UI/Components/NavmeshRender/Navmesh"
 
+Roact.setGlobalConfig({
+    typeChecks = true,
+    propValidation = true,
+})
+
 local function App(store)
 	return Roact.createElement(RoactKetchup.StoreProvider, { store = store }, {
 		AwesomeButton = Roact.createElement(TestButton),
