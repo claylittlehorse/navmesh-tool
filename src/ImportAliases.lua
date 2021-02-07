@@ -6,4 +6,5 @@ return {
 	t = lib.t,
 	LuaGeometry = lib.LuaGeometry,
 	Promise = lib.Promise,
+	StepChain = lib.StepChain,
 }

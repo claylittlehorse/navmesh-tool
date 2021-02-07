@@ -3,24 +3,32 @@ local import = shared.___navmesh_tool_import
 local Roact = import "Roact"
 local t = import "t"
 local CuteButton = import "CuteButton"
-
-local RunService = game:GetService("RunService")
-
-local ANIMATE_FPS = 7
+local StepChain = import "StepChain"
 
 local AnimatedCuteButton = Roact.PureComponent:extend("AnimatedCuteButton")
 
+AnimatedCuteButton.defualtProps = {
+	fps = 7
+}
+
 AnimatedCuteButton.validateProps = t.interface({
-	hoverFrames = t.array(t.string)
+	fps = t.number(),
+	hoverFrames = t.array(t.string),
 })
 
-function AnimatedCuteButton:init()
+function AnimatedCuteButton:init(initialProps)
 	self.accumulator = 0
 
-	self.state = {
-		isHovering = false,
-		frameNum = 1,
-	}
+	self.frameNum, self.updateFrameNum = Roact.createBinding(1)
+
+	self.stepChain =
+	StepChain.new(function(passDown)
+		-- Advance the frame
+		self.updateFrameNum(self.frameNum:getValue() % #initialProps.hoverFrames + 1)
+		passDown()
+	end)
+	:wait(initialProps.fps / 1)
+	:restart()
 end
 
 function AnimatedCuteButton:render()
@@ -33,32 +41,18 @@ function AnimatedCuteButton:render()
 
 	props.onMouseEnter = function()
 		self.accumulator = 0
-		self:setState({isHovering = true})
+		self.stepChain:start()
 	end
 
 	props.onMouseLeave = function()
-		self:setState({
-			isHovering = false,
-			frameNum = 1
-		})
+		self.stepChain:stop()
 	end
 
 	return Roact.createElement(CuteButton, props)
 end
 
-function AnimatedCuteButton:didMount()
-	RunService.Heartbeat:Connect(function(dt)
-		if self.state.isHovering then
-			self.accumulator = self.accumulator + dt
-
-			if self.accumulator >= ANIMATE_FPS then
-				self.accumulator = 0
-				self:setState({
-					frameNum = (self.state.frameNum % #self.props.hoverFrames) + 1
-				})
-			end
-		end
-	end)
+function AnimatedCuteButton:willUnmount()
+	self.stepChain:stop()
 end
 
 return AnimatedCuteButton

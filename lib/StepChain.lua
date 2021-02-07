@@ -45,7 +45,7 @@ local function transplantCallList(fromStepChain, toStepChain, waitUntilNextStep)
 	end
 end
 
-function StepChain.start(funcOrStepChain)
+function StepChain.new(funcOrStepChain)
 	assert(funcOrStepChain and funcOrStepChain ~= StepChain, "Call with ':' not '.' 😊")
 
 	return createStepChain():andThen(funcOrStepChain)
@@ -93,6 +93,10 @@ function StepChain:wait(interval)
 	return self
 end
 
+function StepChain:restart()
+	self._callListIndex = 1
+end
+
 function StepChain:step()
 	repeat
 		local thisIndex = self._callListIndex
@@ -115,7 +119,9 @@ function StepChain:start()
 end
 
 function StepChain:stop()
-	self.__heartbeatConnection:Disconnect()
+	if self.__heartbeatConnection then
+		self.__heartbeatConnection:Disconnect()
+	end
 end
 
 return StepChain
