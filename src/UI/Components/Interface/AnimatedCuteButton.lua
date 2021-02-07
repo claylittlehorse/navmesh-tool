@@ -36,7 +36,9 @@ function AnimatedCuteButton:render()
 
 	-- Inject props
 	if self.state.isHovering then
-		props.image = props.hoverFrames[self.state.frameNum]
+		props.image = self.frameNum:map(function(frameNum)
+			return props.hoverFrames[frameNum]
+		end)
 	end
 
 	props.onMouseEnter = function()
