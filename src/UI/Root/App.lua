@@ -10,7 +10,8 @@ local Navmesh = import "UI/Components/WorldRender/Navmesh"
 
 Roact.setGlobalConfig({
     typeChecks = true,
-    propValidation = true,
+	propValidation = true,
+	elementTracing = true,
 })
 
 local function App(store)

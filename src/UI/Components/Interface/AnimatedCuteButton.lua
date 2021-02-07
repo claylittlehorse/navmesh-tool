@@ -28,7 +28,7 @@ function AnimatedCuteButton:init(initialProps)
 		self.updateFrameNum(self.frameNum:getValue() % #initialProps.hoverFrames + 1)
 		passDown()
 	end)
-	:wait(initialProps.fps / 1)
+	:wait(1 / initialProps.fps)
 	:restart()
 end
 
@@ -50,7 +50,6 @@ function AnimatedCuteButton:render()
 		fps = Cryo.None,
 		hoverFrames = Cryo.None,
 	})
-	print('>>>>>>> lol', newProps.hoverFrames)
 
 	return Roact.createElement(CuteButton, newProps)
 end

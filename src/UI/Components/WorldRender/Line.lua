@@ -14,7 +14,6 @@ Line.defaultProps = {
 	pointB = Vector3.new(),
 
 	transparency = 0.5,
-	lineTransparency = 0,
 	color = Color3.fromRGB(255, 255, 255),
 }
 

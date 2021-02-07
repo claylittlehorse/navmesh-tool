@@ -18,7 +18,7 @@ CuteButton.defaultProps = {
 
 CuteButton.validateProps = t.strictInterface({
 	size = t.UDim2,
-	image = t.string,
+	image = t.union(t.string, t.table),
 
 	onClick = t.callback,
 	onMouseEnter = t.optional(t.callback),

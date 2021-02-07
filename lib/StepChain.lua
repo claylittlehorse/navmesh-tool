@@ -94,7 +94,11 @@ function StepChain:wait(interval)
 end
 
 function StepChain:restart()
-	self._callListIndex = 1
+	self:andThen(function()
+		self._callListIndex = 1
+	end)
+
+	return self
 end
 
 function StepChain:step()

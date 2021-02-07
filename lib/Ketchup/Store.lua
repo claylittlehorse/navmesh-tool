@@ -22,7 +22,7 @@ local function recursiveJoin(oldState, newState)
         end
     end
 
-    for index, newValue in ipairs(newState) do
+    for index, newValue in pairs(newState) do
         if newValue == None then
             newState[index] = nil
         end

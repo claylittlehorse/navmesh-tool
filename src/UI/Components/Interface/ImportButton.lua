@@ -1,6 +1,7 @@
 local import = shared.___navmesh_tool_import
 
 local Roact = import "Roact"
+local Ketchup = import "Ketchup"
 local RoactKetchup = import "RoactKetchup"
 local ImportNavmeshFromObj = import "PluginUtil/ImportNavmeshFromObj"
 local Promise = import "Promise"
@@ -22,14 +23,18 @@ local function ImportButton(props)
 		image = "rbxassetid://6356480655",
 
 		onClick = function()
-			pushToStore({
-				navMesh = nil,
-			})
-			Promise.defer(function()
+			local navMesh = ImportNavmeshFromObj()
+
+			if navMesh then
 				pushToStore({
-					navMesh = ImportNavmeshFromObj(),
+					navMesh = Ketchup.None,
 				})
-			end)
+				Promise.defer(function()
+					pushToStore({
+						navMesh = navMesh,
+					})
+				end)
+			end
 		end
     })
 end
