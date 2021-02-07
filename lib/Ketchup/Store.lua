@@ -22,6 +22,12 @@ local function recursiveJoin(oldState, newState)
         end
     end
 
+    for index, newValue in ipairs(newState) do
+        if newValue == None then
+            newState[index] = nil
+        end
+    end
+
     return newState
 end
 
@@ -38,7 +44,7 @@ function Store.new(initialState)
     local connection = self._flushEvent:Connect(function()
 		self:flush()
     end)
-    
+
 	table.insert(self._connections, connection)
 
     return self
