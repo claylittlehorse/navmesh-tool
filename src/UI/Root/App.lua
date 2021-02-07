@@ -5,7 +5,8 @@ local import = shared.___navmesh_tool_import
 local Roact = import "Roact"
 local RoactKetchup = import "RoactKetchup"
 
-local TestButton = import "UI/Components/Interface/ImportButton"
+local ImportButton = import "UI/Components/Interface/ImportButton"
+local ExportButton = import "UI/Components/Interface/ExportButton"
 local Navmesh = import "UI/Components/WorldRender/Navmesh"
 
 Roact.setGlobalConfig({
@@ -16,7 +17,8 @@ Roact.setGlobalConfig({
 
 local function App(store)
 	return Roact.createElement(RoactKetchup.StoreProvider, { store = store }, {
-		AwesomeButton = Roact.createElement(TestButton),
+		ImportButton = Roact.createElement(ImportButton),
+		ExportButton = Roact.createElement(ExportButton),
 		Navmesh = Roact.createElement(Navmesh),
 	})
 end

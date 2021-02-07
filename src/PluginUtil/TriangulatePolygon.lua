@@ -12,7 +12,6 @@
 local function TriangulatePolygon(points)
 	local triangles = {}
 
-
 	if #points >= 3 then
 		local aIndex = 1
 		local bIndex = 2

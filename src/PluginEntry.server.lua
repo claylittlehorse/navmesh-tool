@@ -18,7 +18,8 @@ local coreModuleLoadOrder = {
 local loadedModules = {}
 
 local store = Ketchup.Store.new({
-	enabled = false
+	enabled = false,
+	plugin = plugin
 })
 
 for _, moduleName in ipairs(coreModuleLoadOrder) do
