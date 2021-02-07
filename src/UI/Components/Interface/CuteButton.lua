@@ -25,7 +25,7 @@ CuteButton.validateProps = t.strictInterface({
 	onMouseLeave = t.optional(t.callback),
 
 	visible = t.optional(t.boolean),
-	color = t.optional(t.Color3),
+	color = t.optional(t.union(t.table, t.Color3)), -- allows Roact bindings
 
 	anchorPoint = t.optional(t.Vector2),
 	position = t.optional(t.UDim2),
