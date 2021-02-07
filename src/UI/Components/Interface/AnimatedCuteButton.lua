@@ -9,7 +9,7 @@ local CuteButton = import "./CuteButton"
 local AnimatedCuteButton = Roact.PureComponent:extend("AnimatedCuteButton")
 
 AnimatedCuteButton.defaultProps = {
-	fps = 7
+	fps = 6
 }
 
 AnimatedCuteButton.validateProps = t.interface({
