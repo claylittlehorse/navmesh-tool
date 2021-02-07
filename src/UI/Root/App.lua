@@ -6,6 +6,7 @@ local Roact = import "Roact"
 local RoactKetchup = import "RoactKetchup"
 
 local ImportButton = import "UI/Components/Interface/ImportButton"
+local ExportButton = import "UI/Components/Interface/ExportButton"
 local Navmesh = import "UI/Components/WorldRender/Navmesh"
 
 Roact.setGlobalConfig({
@@ -21,6 +22,7 @@ local function App(store)
 			BackgroundColor3 = Color3.fromRGB(255, 231, 48),
 		}, {
 			ImportButton = Roact.createElement(ImportButton),
+			ExportButton = Roact.createElement(ExportButton),
 		}),
 		Navmesh = Roact.createElement(Navmesh),
 	})

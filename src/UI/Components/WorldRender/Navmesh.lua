@@ -32,9 +32,9 @@ function NavMesh(props)
 	-- 	})
 	-- end
 
-	for index, polygon in ipairs(navMesh.polygons) do
+	for index, node in ipairs(navMesh.nodes) do
 		local points = {}
-		for i, vertexIndex in ipairs(polygon) do
+		for i, vertexIndex in ipairs(node.vertices) do
 			local vertexPosition = navMesh.vertices[vertexIndex]
 			points[i] = vertexPosition
 		end

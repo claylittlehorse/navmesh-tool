@@ -3,6 +3,7 @@ local import = shared.___navmesh_tool_import
 local StudioService = game:GetService("StudioService")
 
 local StringSplitPattern = import "Util/StringSplitPattern"
+local TriangulatePolygon = import "PluginUtil/TriangulatePolygon"
 
 local function convertObjToVertsAndPolygons(objFileBinary)
 	local lines = string.split(objFileBinary, "\n")
@@ -31,7 +32,11 @@ local function convertObjToVertsAndPolygons(objFileBinary)
 					table.insert(polygon, vertexIndex)
 				end
 			end
-			table.insert(polygons, polygon)
+
+			local newTris = TriangulatePolygon(polygon)
+			for _, tri in ipairs(newTris) do
+				table.insert(polygons, tri)
+			end
 		end
 	end
 
@@ -46,13 +51,13 @@ local function createNavMesh(vertices, polygons)
 		nodes = {},
 		lines = lines,
 		vertices = vertices,
-		polygons = polygons
+		vertexAnnotations = {}
 	}
 
 	for nodeIndex, polygon in ipairs(polygons) do
 		local navMeshNode = {
 			vertices = {},
-			nodeConnections = {},
+			connections = {},
 			annotations = {}
 		}
 
@@ -65,47 +70,53 @@ local function createNavMesh(vertices, polygons)
 			local lineKey = tostring(vertexIndex) .. "," .. tostring(nextVertexIndex)
 			local inverseLineKey = tostring(nextVertexIndex) .. "," .. tostring(vertexIndex)
 
-			local polygonsWithLine = linesDict[lineKey] or linesDict[inverseLineKey]
+			local lineInfo = linesDict[lineKey] or linesDict[inverseLineKey]
 
-			if not polygonsWithLine then
-				polygonsWithLine = {}
-				table.insert(lines, {a = vertexIndex, b = nextVertexIndex})
-
-				linesDict[lineKey] = {
-					polygonsWithLine = polygonsWithLine,
+			if not lineInfo then
+				lineInfo = {
+					polygonsWithLine = {},
 					lineIndex = #lines,
 				}
+				linesDict[lineKey] = lineInfo
+
+				table.insert(lines, {a = vertexIndex, b = nextVertexIndex})
 			end
 
 			-- Add the polygon to the lineDict for building connections between nodes later
-			table.insert(polygonsWithLine, nodeIndex)
+			table.insert(lineInfo.polygonsWithLine, nodeIndex)
 		end
 
 		navMesh.nodes[nodeIndex] = navMeshNode
 	end
 
-	for lineKey, lineInfo in ipairs(linesDict) do
+	for lineKey, lineInfo in pairs(linesDict) do
 		local line = lines[lineInfo.lineIndex]
 		local connectedNodeIndices = lineInfo.polygonsWithLine
 
 		-- Connect nodes
 		for i, nodeIndex in ipairs(connectedNodeIndices) do
-			local thisNode = navMesh[nodeIndex]
+			local thisNode = navMesh.nodes[nodeIndex]
+			print('>>> trying to connect!', #connectedNodeIndices)
 
 			-- i+1 in the inner loop here makes the connection process O(n!) as
 			-- opposed to O(n^2)
-			for otherNodeIndex = i+1, #connectedNodeIndices do
-				local otherNode = navMesh[otherNodeIndex]
+			for otherNodeIndexIndex = i+1, #connectedNodeIndices do
+				local otherNodeIndex = connectedNodeIndices[otherNodeIndexIndex]
+				local otherNode = navMesh.nodes[otherNodeIndex]
 
-				table.insert(thisNode.nodeConnections, {
+				table.insert(thisNode.connections, {
 					node = otherNode,
+					nodeIndex = otherNodeIndex,
 					line = line,
+					lineIndex = lineInfo.lineIndex,
 					annotations = {},
 				})
 
-				table.insert(otherNode.nodeConnections, {
+				table.insert(otherNode.connections, {
 					node = thisNode,
+					nodeIndex = nodeIndex,
 					line = line,
+					lineIndex = lineInfo.lineIndex,
 					annotations = {},
 				})
 			end
