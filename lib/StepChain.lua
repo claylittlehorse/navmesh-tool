@@ -95,10 +95,14 @@ end
 
 function StepChain:restart()
 	self:andThen(function()
-		self._callListIndex = 1
+		self:reset()
 	end)
 
 	return self
+end
+
+function StepChain:reset()
+	self._callListIndex = 1
 end
 
 function StepChain:step()
@@ -123,6 +127,13 @@ function StepChain:start()
 end
 
 function StepChain:stop()
+	if self.__heartbeatConnection then
+		self.__heartbeatConnection:Disconnect()
+		self:reset()
+	end
+end
+
+function StepChain:pause()
 	if self.__heartbeatConnection then
 		self.__heartbeatConnection:Disconnect()
 	end
