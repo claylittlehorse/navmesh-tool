@@ -25,7 +25,7 @@ function ImportButton:render(props)
 		color = self.color,
 		size = UDim2.fromOffset(171, 171),
 
-		fps = 7.5,
+		fps = 8,
 		hoverFrames = {
 			"rbxassetid://6357857882",
 			"rbxassetid://6357858349",
