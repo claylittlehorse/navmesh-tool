@@ -45,10 +45,10 @@ function CuteButton:render()
 		[Roact.Event.Activated] = function()
 			props.onClick()
 		end,
-		[Roact.MouseEnter] = function()
+		[Roact.Event.MouseEnter] = function()
 			props.onMouseEnter()
 		end,
-		[Roact.MouseLeave] = function()
+		[Roact.Event.MouseLeave] = function()
 			props.onMouseLeave()
 		end,
 	})

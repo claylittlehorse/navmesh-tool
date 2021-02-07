@@ -2,17 +2,18 @@ local import = shared.___navmesh_tool_import
 
 local Roact = import "Roact"
 local t = import "t"
-local CuteButton = import "CuteButton"
+local Cryo = import "Cryo"
 local StepChain = import "StepChain"
+local CuteButton = import "./CuteButton"
 
 local AnimatedCuteButton = Roact.PureComponent:extend("AnimatedCuteButton")
 
-AnimatedCuteButton.defualtProps = {
+AnimatedCuteButton.defaultProps = {
 	fps = 7
 }
 
 AnimatedCuteButton.validateProps = t.interface({
-	fps = t.number(),
+	fps = t.number,
 	hoverFrames = t.array(t.string),
 })
 
@@ -34,23 +35,24 @@ end
 function AnimatedCuteButton:render()
 	local props = self.props
 
-	-- Inject props
-	if self.state.isHovering then
-		props.image = self.frameNum:map(function(frameNum)
+	local newProps = Cryo.Dictionary.join(props, {
+		image = self.frameNum:map(function(frameNum)
 			return props.hoverFrames[frameNum]
-		end)
-	end
+		end),
+		onMouseEnter = function()
+			self.accumulator = 0
+			self.stepChain:start()
+		end,
+		onMouseLeave = function()
+			self.stepChain:stop()
+		end,
 
-	props.onMouseEnter = function()
-		self.accumulator = 0
-		self.stepChain:start()
-	end
+		fps = Cryo.None,
+		hoverFrames = Cryo.None,
+	})
+	print('>>>>>>> lol', newProps.hoverFrames)
 
-	props.onMouseLeave = function()
-		self.stepChain:stop()
-	end
-
-	return Roact.createElement(CuteButton, props)
+	return Roact.createElement(CuteButton, newProps)
 end
 
 function AnimatedCuteButton:willUnmount()
