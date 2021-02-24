@@ -73,13 +73,13 @@ local function createNavMesh(vertices, polygons)
 			local lineInfo = linesDict[lineKey] or linesDict[inverseLineKey]
 
 			if not lineInfo then
+				table.insert(lines, {a = vertexIndex, b = nextVertexIndex})
+
 				lineInfo = {
 					polygonsWithLine = {},
 					lineIndex = #lines,
 				}
 				linesDict[lineKey] = lineInfo
-
-				table.insert(lines, {a = vertexIndex, b = nextVertexIndex})
 			end
 
 			-- Add the polygon to the lineDict for building connections between nodes later
