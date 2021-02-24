@@ -17,8 +17,13 @@ Roact.setGlobalConfig({
 
 local function App(store)
 	return Roact.createElement(RoactKetchup.StoreProvider, { store = store }, {
-		ImportButton = Roact.createElement(ImportButton),
-		ExportButton = Roact.createElement(ExportButton),
+		BackgroundFrame = Roact.createElement("Frame", {
+			Size = UDim2.fromScale(1, 1),
+			BackgroundColor3 = Color3.fromRGB(255, 231, 48),
+		}, {
+			ImportButton = Roact.createElement(ImportButton),
+			ExportButton = Roact.createElement(ExportButton),
+		}),
 		Navmesh = Roact.createElement(Navmesh),
 	})
 end

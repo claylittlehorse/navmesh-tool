@@ -9,7 +9,9 @@ local CuteButton = import "./CuteButton"
 local AnimatedCuteButton = Roact.PureComponent:extend("AnimatedCuteButton")
 
 AnimatedCuteButton.defaultProps = {
-	fps = 6
+	fps = 6,
+	onMouseEnter = function() end,
+	onMouseLeave = function() end,
 }
 
 AnimatedCuteButton.validateProps = t.interface({
@@ -18,18 +20,16 @@ AnimatedCuteButton.validateProps = t.interface({
 })
 
 function AnimatedCuteButton:init(initialProps)
-	self.accumulator = 0
-
 	self.frameNum, self.updateFrameNum = Roact.createBinding(1)
 
 	self.stepChain =
-	StepChain.new(function(passDown)
-		-- Advance the frame
-		self.updateFrameNum(self.frameNum:getValue() % #initialProps.hoverFrames + 1)
-		passDown()
-	end)
-	:wait(1 / initialProps.fps)
-	:restart()
+		StepChain.new(function(passDown)
+			-- Advance the frame
+			self.updateFrameNum(self.frameNum:getValue() % #initialProps.hoverFrames + 1)
+			passDown()
+		end)
+		:wait(1 / initialProps.fps)
+		:restart()
 end
 
 function AnimatedCuteButton:render()
@@ -40,11 +40,13 @@ function AnimatedCuteButton:render()
 			return props.hoverFrames[frameNum]
 		end),
 		onMouseEnter = function()
-			self.accumulator = 0
 			self.stepChain:start()
+			self.props.onMouseEnter()
 		end,
 		onMouseLeave = function()
 			self.stepChain:stop()
+			self.updateFrameNum(1)
+			self.props.onMouseLeave()
 		end,
 
 		fps = Cryo.None,

@@ -7,20 +7,31 @@ local ImportNavmeshFromObj = import "PluginUtil/ImportNavmeshFromObj"
 local Promise = import "Promise"
 local AnimatedCuteButton = import "./AnimatedCuteButton"
 
-local function ImportButton(props)
-	local enabled = props.enabled
-	local pushToStore = props.pushToStore
+local DEFAULT_COLOR = Color3.fromRGB(255, 93, 180)
+local HOVER_COLOR = Color3.fromRGB(255, 0, 153)
 
-    -- local color = enabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+local ImportButton = Roact.PureComponent:extend("ImportButton")
+
+function ImportButton:init()
+	self.color, self.setColor = Roact.createBinding(DEFAULT_COLOR)
+end
+
+function ImportButton:render(props)
+	local pushToStore = self.props.pushToStore
 
     return Roact.createElement(AnimatedCuteButton, {
 		anchorPoint = Vector2.new(0.5, 0.5),
-		position = UDim2.fromScale(0.25, 0.5),
-		color = Color3.fromRGB(255, 0, 153),
-		size = UDim2.fromOffset(172, 155),
+		position = UDim2.fromScale(0.5, 0.5),
+		color = self.color,
+		size = UDim2.fromOffset(171, 171),
 
-		hoverFrames = {"rbxassetid://6356480655", "rbxassetid://6356199285"},
-		image = "rbxassetid://6356480655",
+		fps = 8,
+		hoverFrames = {
+			"rbxassetid://6357857882",
+			"rbxassetid://6357858349",
+			"rbxassetid://6357861691",
+			"rbxassetid://6357862020",
+		},
 
 		onClick = function()
 			local navMesh = ImportNavmeshFromObj()
@@ -35,6 +46,12 @@ local function ImportButton(props)
 					})
 				end)
 			end
+		end,
+		onMouseEnter = function()
+			self.setColor(HOVER_COLOR)
+		end,
+		onMouseLeave = function()
+			self.setColor(DEFAULT_COLOR)
 		end
     })
 end
